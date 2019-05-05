@@ -1,0 +1,9 @@
+/storage/*.key
+/vendor
+/.idea
+.env
+/.vscode
+*.exe
+*.exe~
+.DS_Store
+app
