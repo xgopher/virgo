@@ -2,11 +2,13 @@ package routes
 
 import (
 	"app/modules/user/controllers"
+
 	"github.com/gin-gonic/gin"
 )
 
 // RegisterRoutes ...
 func RegisterRoutes(router *gin.Engine) {
+	// userController := controllers.UserController{} // 正常使用方法
 	userController := controllers.NewUserController()
 	v1 := router.Group("api/v1")
 	{
