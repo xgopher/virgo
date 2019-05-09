@@ -22,7 +22,11 @@
 
 - 本地开发热更新2 (可能比bee好一点, 暂没测试)
 
-    - `https://github.com/gravityblast/fresh`
+    - https://github.com/gravityblast/fresh
+
+- 生产环境热更新 (详细使用，后续补全)
+
+    - https://github.com/howeyc/fsnotify
 
 
 ## AJAX OPTIONS
