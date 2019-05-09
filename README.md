@@ -3,11 +3,18 @@
 
 ## 安装
 
-```
-export GOPROXY=https://goproxy.io
-go build ./...
-./app
-```
+- 线上部署及docker环境下：
+    ```
+    export GOPROXY=https://goproxy.io
+    go build ./...
+    ./app
+    ```
+- 本地开发(非docker环境下)：
+    ```
+    export GOPROXY=https://goproxy.io
+    go mod tidy
+    go run main.go
+    ```
 
 
 ## AJAX OPTIONS
