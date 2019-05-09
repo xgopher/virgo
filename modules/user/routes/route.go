@@ -2,6 +2,7 @@ package routes
 
 import (
 	"app/modules/user/controllers"
+	"app/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,10 +13,15 @@ func RegisterRoutes(router *gin.Engine) {
 	userController := controllers.NewUserController()
 	v1 := router.Group("api/v1")
 	{
-		v1.GET("/users", userController.Index)
-		v1.POST("/users", userController.Store)
-		v1.GET("/users/:id", userController.Show)
-		v1.PUT("/users/:id", userController.Update)
-		v1.DELETE("/users/:id", userController.Destroy)
+		v1.POST("/login", userController.Login)
+
+		auth := router.Group("/api/v1", middlewares.Jwt())
+		{
+			auth.GET("/users", userController.Index)
+			auth.POST("/users", userController.Store)
+			auth.GET("/users/:id", userController.Show)
+			auth.PUT("/users/:id", userController.Update)
+			auth.DELETE("/users/:id", userController.Destroy)
+		}
 	}
 }

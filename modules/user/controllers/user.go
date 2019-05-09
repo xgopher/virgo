@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"app/database"
+	"app/services"
 	"app/modules/user/models"
 	"github.com/gin-gonic/gin"
 )
@@ -10,8 +11,43 @@ import (
 type UserController struct {
 }
 
+// LoginResult 登录结果结构
+type loginResult struct {
+    Token string `json:"token"`
+    models.User
+}
+
 func NewUserController() *UserController {
 	return &UserController{}
+}
+
+// login
+func(i *UserController) Login(c *gin.Context) {
+	db := database.DB
+
+	username := c.Params.ByName("username")
+	password := c.Params.ByName("password")
+
+	var user models.User
+	// SELECT * FROM users WHERE username='' and password='';
+	if db.Where(&models.User{Username: username, Password: password}).First(&user).Error != nil{
+		c.JSON(401, gin.H{"error": "username or password error"})
+	}
+	
+	token, err := services.NewJwt().GetTokenFromUser(user)
+	if err != nil {
+		c.JSON(401, gin.H{"error": err})
+	}
+
+	data := loginResult{
+        User:  user,
+        Token: token,
+    }
+	c.JSON(200, gin.H{
+        "status": 0,
+        "msg":    "登录成功！",
+        "data":   data,
+    })
 }
 
 // ...
