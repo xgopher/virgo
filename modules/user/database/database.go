@@ -7,4 +7,7 @@ import(
 func Migrate() {
 	user := migrations.User{}
 	user.Create()
+
+	oauth_wechat := migrations.OauthWechat{}
+	oauth_wechat.Create()	
 }
