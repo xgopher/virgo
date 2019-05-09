@@ -15,6 +15,10 @@
     go mod tidy
     go run main.go
     ```
+- 本地开发热更新（docker中不生效）
+
+    - 下载bee工具：`go get github.com/beego/bee` (建议不要在此文件夹下执行，不然会进入mod文件里面)
+    - 在此文件夹下执行`bee run`，会自动监听文件变化，重新编译
 
 
 ## AJAX OPTIONS
