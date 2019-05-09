@@ -20,6 +20,10 @@
     - 下载bee工具：`go get github.com/beego/bee` (建议不要在此文件夹下执行，不然会进入mod文件里面)
     - 在此文件夹下执行`bee run`，会自动监听文件变化，重新编译
 
+- 本地开发热更新2 (可能比bee好一点, 暂没测试)
+
+    - `https://github.com/gravityblast/fresh`
+
 
 ## AJAX OPTIONS
 
