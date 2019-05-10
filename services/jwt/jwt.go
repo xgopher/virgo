@@ -1,4 +1,4 @@
-package services
+package jwt
 
 import (
 	"app/modules/user/models"
@@ -30,7 +30,7 @@ type customClaims struct {
 }
 
 // 新建一个jwt实例
-func NewJwt() *JWT {
+func New() *JWT {
 	return &JWT{
 		[]byte(getSignKey()),
 	}

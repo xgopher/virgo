@@ -1,11 +1,11 @@
 package middlewares
 
 import (
-	"strings"
-	"net/http"
+	"app/services/jwt"
 	"errors"
-	
-	"app/services"
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,26 +22,26 @@ func Jwt() gin.HandlerFunc {
 			}
 		}
 
-		j := services.NewJwt()
-        // parseToken 解析token包含的信息
-        claims, err := j.ParseToken(tokenStr)
-        if err != nil {
-            if err == TokenExpired {
-                c.JSON(http.StatusOK, gin.H{
-                    "status": -1,
-                    "msg":    "授权已过期",
-                })
-                c.Abort()
-                return
-            }
-            c.JSON(http.StatusOK, gin.H{
-                "status": -1,
-                "msg":    err.Error(),
-            })
-            c.Abort()
-            return
-        }
-        // 继续交由下一个路由处理,并将解析出的信息传递下去
+		j := jwt.New()
+		// parseToken 解析token包含的信息
+		claims, err := j.ParseToken(tokenStr)
+		if err != nil {
+			if err == TokenExpired {
+				c.JSON(http.StatusOK, gin.H{
+					"status": -1,
+					"msg":    "授权已过期",
+				})
+				c.Abort()
+				return
+			}
+			c.JSON(http.StatusOK, gin.H{
+				"status": -1,
+				"msg":    err.Error(),
+			})
+			c.Abort()
+			return
+		}
+		// 继续交由下一个路由处理,并将解析出的信息传递下去
 		c.Set("claims", claims)
 	}
 }
