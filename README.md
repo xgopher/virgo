@@ -28,6 +28,12 @@
 
     - https://github.com/howeyc/fsnotify
 
+## 技术选型
+
+- [x] 1
+- [x] 2
+- [x] 3
+- [x] ...
 
 ## AJAX OPTIONS
 
