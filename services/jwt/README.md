@@ -46,6 +46,19 @@ nbf (Not Before)：如果当前时间在nbf里的时间之前，则Token不被�
 ### 使用
 
 ```
-....
+import "app/services/jwt"
+
+// 定义载体
+payload := jwt.Payload {
+    "uid": "8888",
+    "iat": "签发时间"
+    "exp": "过期时间",
+}
+
+// 加密
+token := jwt.encode(payload)
+
+// 解密
+payload := jwt.decode(token)
 
 ```
