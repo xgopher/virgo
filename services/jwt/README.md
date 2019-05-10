@@ -56,9 +56,9 @@ payload := jwt.Payload {
 }
 
 // 加密
-token := jwt.encode(payload)
+token := jwt.Encode(payload)
 
 // 解密
-payload := jwt.decode(token)
+payload := jwt.Decode(token)
 
 ```
