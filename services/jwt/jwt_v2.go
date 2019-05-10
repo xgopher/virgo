@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"fmt"
-	"os"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
@@ -11,7 +10,7 @@ import (
 var jwtSecret []byte
 
 func init() {
-	jwtSecret = []byte(os.Getenv("JWT_SIGN"))
+	jwtSecret = []byte("123456")
 }
 
 // Payload 载体
