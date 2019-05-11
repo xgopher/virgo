@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"app/database"
-	"app/services"
+	"app/modules/user/services"
 	"app/modules/user/models"
 	"github.com/gin-gonic/gin"
 )
@@ -11,10 +11,14 @@ import (
 type UserController struct {
 }
 
+type UserInfo struct {
+	models.User
+}
+
 // LoginResult 登录结果结构
 type loginResult struct {
     Token string `json:"token"`
-    models.User
+    UserInfo `json:"user"`
 }
 
 func NewUserController() *UserController {
@@ -34,14 +38,16 @@ func(i *UserController) Login(c *gin.Context) {
 		c.JSON(401, gin.H{"error": "username or password error"})
 	}
 	
-	token, err := services.NewJwt().GetTokenFromUser(user)
+	token, err := services.GetTokenFromUser(user)
 	if err != nil {
 		c.JSON(401, gin.H{"error": err})
 	}
 
 	data := loginResult{
-        User:  user,
-        Token: token,
+		Token: token,
+		UserInfo: UserInfo {
+			User: user,
+		},
     }
 	c.JSON(200, gin.H{
         "status": 0,
@@ -60,7 +66,11 @@ func (i *UserController) Index(c *gin.Context) {
 	db.Find(&users)
 
 	// Display JSON result
-	c.JSON(200, users)
+	c.JSON(200, gin.H{
+        "status": 0,
+        "msg":    "success!",
+        "data":   users,
+	})
 }
 
 func (i *UserController) Store(c *gin.Context) {

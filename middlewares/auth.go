@@ -22,9 +22,8 @@ func Jwt() gin.HandlerFunc {
 			}
 		}
 
-		j := jwt.New()
-		// parseToken 解析token包含的信息
-		claims, err := j.ParseToken(tokenStr)
+		// Decode 解析token包含的信息
+		claims, err := jwt.Decode(tokenStr)
 		if err != nil {
 			if err == TokenExpired {
 				c.JSON(http.StatusOK, gin.H{
