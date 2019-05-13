@@ -1,13 +1,10 @@
 package database
 
-import(
-	"app/modules/user/database/migrations"	
+import (
+	"app/modules/user/database/migrations"
 )
 
 func Migrate() {
 	user := migrations.User{}
 	user.Create()
-
-	oauth_wechat := migrations.OauthWechat{}
-	oauth_wechat.Create()	
 }

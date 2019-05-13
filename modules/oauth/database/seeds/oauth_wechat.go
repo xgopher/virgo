@@ -1,11 +1,10 @@
 package seeds
 
-// User Seed
+// oauth Seed
 type OauthWechat struct {
-
 }
 
-// Seed User Table
+// Seed oauth Table
 func (u *OauthWechat) Seed() {
 
 }

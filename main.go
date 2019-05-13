@@ -4,6 +4,7 @@ import (
 	"app/config"
 	"app/database"
 	"app/middlewares"
+	"app/modules/oauth"
 	"app/modules/user"
 	"os"
 
@@ -24,6 +25,7 @@ func main() {
 
 	// 注册模块
 	user.Register(e)
+	oauth.Register(e)
 	// Listen and Server in 0.0.0.0:8080
 	port := os.Getenv("HTTP_PORT")
 	e.Run(":" + port)
