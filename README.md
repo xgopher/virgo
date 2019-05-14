@@ -56,7 +56,29 @@ func OptionsUser(c *gin.Context) {
 }
 ```
 
+## 请求参数
+
+> @https://gin-gonic.com/zh-cn/docs/examples/query-and-post-form/
+
+```
+func main() {
+	router := gin.Default()
+
+	router.POST("/post", func(c *gin.Context) {
+
+		id := c.Query("id")
+		page := c.DefaultQuery("page", "0")
+		name := c.PostForm("name")
+		message := c.PostForm("message")
+
+		fmt.Printf("id: %s; page: %s; name: %s; message: %s", id, page, name, message)
+	})
+	router.Run(":8080")
+}
+```
 
 ## 参考
 
 - http://www.jyguagua.com/?p=3038
+
+- [Gin 官方文档](https://gin-gonic.com/zh-cn/docs/)

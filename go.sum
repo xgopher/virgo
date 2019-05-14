@@ -9,6 +9,17 @@ github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuy
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/apache/thrift v0.12.0/go.mod h1:cp2SuWMxlEZw2r+iP2GNCdIi4C1qmUzdZFSVb+bacwQ=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
+github.com/chanxuehong/internal v0.0.0-20180430074813-85d6017afbc4 h1:oIVeDc/vhuIVqHo13mjZXfHV4usEXez7ZvnDsNbv6wA=
+github.com/chanxuehong/internal v0.0.0-20180430074813-85d6017afbc4/go.mod h1:G4Uw1UFjRzDVuVpWwOJZoj0DeqP0GKZqU824CzRJM4I=
+github.com/chanxuehong/rand v0.0.0-20180830053958-4b3aff17f488 h1:6d1ijTov542DDRWsFdnPYeGWnlRxlzbpEaJuNJtBQiU=
+github.com/chanxuehong/rand v0.0.0-20180830053958-4b3aff17f488/go.mod h1:h13adSJmQ5tsaV9bR72eTp7ePXJ2WIWyK6heLeietxA=
+github.com/chanxuehong/session v0.0.0-20141231161243-62053c2ee975 h1:2ocvg2LITf46pOMz/lm7iEbFYSozeSJZHWOauAzcxr4=
+github.com/chanxuehong/session v0.0.0-20141231161243-62053c2ee975/go.mod h1:XmZ5cNcHXsI72NpXsFbBDTykojWkDb7zjNyJluAGKMY=
+github.com/chanxuehong/sid v0.0.0-20151130051504-1426da3b0352 h1:1zrSt51Xir+GN8AGjGgc5O21DJGsZJZeN6sybwTL8vA=
+github.com/chanxuehong/sid v0.0.0-20151130051504-1426da3b0352/go.mod h1:q8qN5PJQ4A3mPQlalAN55Ansfsu6l+ofiucgmhC6ZjE=
+github.com/chanxuehong/util v0.0.0-20181116100727-caf892acd09c/go.mod h1:oCc2u0egGweOE68RdURGznc2LgbCrdGAAkXOQw2CuNM=
+github.com/chanxuehong/wechat v0.0.0-20190402080703-96dacc8dde45 h1:QxSc9Dxhj1OUY4wMUnQHCcS6YKEzIiV0BeMBN+mDsNU=
+github.com/chanxuehong/wechat v0.0.0-20190402080703-96dacc8dde45/go.mod h1:MIaNMLnYC8S3HpHHzzpOajlZZfMy57dvIMHi3wq1t+8=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
