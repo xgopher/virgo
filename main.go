@@ -7,11 +7,21 @@ import (
 	"app/modules/oauth"
 	"app/modules/user"
 	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
+	dubugMode, _ := strconv.ParseBool(os.Getenv("APP_DEBUG"))
+
+	if dubugMode {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	// 初始化DB链接池
 	database.InitPool()
 	// 服务停止时清理数据库链接
