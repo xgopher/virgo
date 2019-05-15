@@ -79,5 +79,6 @@ func main() {
 
 ## 参考资料
 
+- [Gin Framework](https://github.com/gin-gonic/gin)
 - [Gin 官方文档](https://gin-gonic.com/zh-cn/docs/)
 - [基于Go框架Gin开发RESTFul API](http://www.jyguagua.com/?p=3038)

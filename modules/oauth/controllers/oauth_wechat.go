@@ -105,6 +105,7 @@ func (i *OauthWechatController) GetUserInfo(c *gin.Context) {
 		Endpoint: oauth2Endpoint,
 	}
 
+	// 通过 code 换取网页授权 access_token
 	token, err := oauth2Client.ExchangeToken(code)
 
 	if err != nil {
@@ -114,8 +115,12 @@ func (i *OauthWechatController) GetUserInfo(c *gin.Context) {
 	}
 
 	log.Printf("token: %+v\r\n", token)
-
+	// access_token 调取微信用户信息
+	// 返回unionid、openid 等信息
 	userinfo, err := mpoauth2.GetUserInfo(token.AccessToken, token.OpenId, "", nil)
+
+	// 根据 unionid 获取本地 user 信息 (如：关联 users 表)
+	// ... todo...
 
 	if err != nil {
 		c.JSON(404, gin.H{"error": err.Error()})
