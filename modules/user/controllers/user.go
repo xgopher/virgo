@@ -1,9 +1,13 @@
 package controllers
 
 import (
+	"strconv"
+
 	"app/database"
+	"app/services/pagination"
 	"app/modules/user/services"
 	"app/modules/user/models"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -58,18 +62,31 @@ func(i *UserController) Login(c *gin.Context) {
 
 // ...
 func (i *UserController) Index(c *gin.Context) {
+
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	PerPage, _ := strconv.Atoi(c.DefaultQuery("per_page", "0"))
+	
 	// Connection to the database
 	db := database.DB
 
 	var users []models.User
 	// SELECT * FROM users
-	db.Find(&users)
+
+	paginator := pagination.Pagging(&pagination.Param{
+        DB:      db,
+        Page:    page,
+        PerPage:   PerPage,
+        OrderBy: []string{"id desc"},
+        ShowSQL: true,
+	}, &users)
+	
+	// db.Find(&users)
 
 	// Display JSON result
 	c.JSON(200, gin.H{
         "status": 0,
         "msg":    "success!",
-        "data":   users,
+        "data":   paginator,
 	})
 }
 
