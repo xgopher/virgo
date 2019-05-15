@@ -12,29 +12,35 @@ type Param struct {
 	Page    int
 	PerPage int
 	OrderBy []string
-	ShowSQL bool
 }
 
 // Paginator 分页返回
 type Paginator struct {
 	Total       int         `json:"total"`
-	LastPage    int         `json:"last_page"`
-	Data        interface{} `json:"data"`
 	From        int         `json:"from"`
 	To          int         `json:"to"`
 	PerPage     int         `json:"per_page"`
 	CurrentPage int         `json:"current_page"`
+	LastPage    int         `json:"last_page"`
 	PrevPage    int         `json:"prev_page"`
 	NextPage    int         `json:"next_page"`
 }
 
-// Paging 分页
-func Pagging(p *Param, result interface{}) *Paginator {
+// Meta 分页头信息
+type Meta struct {
+	Paginator `josn:"pagination"`
+}
+
+// Result 分页处理结果
+type Result struct {
+	Meta `josn:"meta"`
+	Data interface{} `json:"data"`
+}
+
+// Pagging 分页
+func Pagging(p *Param, result interface{}) *Result {
 	db := p.DB
 
-	if p.ShowSQL {
-		db = db.Debug()
-	}
 	if p.Page < 1 {
 		p.Page = 1
 	}
@@ -64,7 +70,7 @@ func Pagging(p *Param, result interface{}) *Paginator {
 	<-done
 
 	paginator.Total = count
-	paginator.Data = result
+	// paginator.Data = result
 	paginator.CurrentPage = p.Page
 
 	paginator.From = offset + 1
@@ -83,7 +89,15 @@ func Pagging(p *Param, result interface{}) *Paginator {
 	} else {
 		paginator.NextPage = p.Page + 1
 	}
-	return &paginator
+
+	r := Result{
+		Data: result,
+		Meta: Meta {
+			Paginator: paginator,
+		},
+	}
+	return &r
+	// return &paginator
 }
 
 func countRecords(db *gorm.DB, anyType interface{}, done chan bool, count *int) {

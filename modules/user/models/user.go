@@ -1,6 +1,6 @@
 package models
 
-import "time"
+import "app/services/time"
 
 // User ...
 type User struct {
@@ -9,9 +9,9 @@ type User struct {
 	Lastname  string `gorm:"not null" form:"lastname" json:"lastname"`
 	Username  string `gorm:"size:32;not null;unique_index" from:"username" json:"username"`
 	Password  string `gorm:"not null" from:"password" json:"password"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt *time.Time `json:"-"`
 }
 
 // TableName 设置表名

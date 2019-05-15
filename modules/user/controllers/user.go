@@ -60,7 +60,7 @@ func(i *UserController) Login(c *gin.Context) {
     })
 }
 
-// ...
+// Index 用户列表（分页）
 func (i *UserController) Index(c *gin.Context) {
 
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
@@ -77,7 +77,6 @@ func (i *UserController) Index(c *gin.Context) {
         Page:    page,
         PerPage:   PerPage,
         OrderBy: []string{"id desc"},
-        ShowSQL: true,
 	}, &users)
 	
 	// db.Find(&users)
@@ -86,10 +85,12 @@ func (i *UserController) Index(c *gin.Context) {
 	c.JSON(200, gin.H{
         "status": 0,
         "msg":    "success!",
-        "data":   paginator,
+		"data":   paginator.Data,
+		"meta": paginator.Meta,
 	})
 }
 
+// Store 新增用户
 func (i *UserController) Store(c *gin.Context) {
 	db := database.DB
 
@@ -107,6 +108,7 @@ func (i *UserController) Store(c *gin.Context) {
 	}
 }
 
+// GetUsers 获取所有用户
 func (i *UserController) GetUsers(c *gin.Context) {
 	// Connection to the database
 	db := database.DB
@@ -119,6 +121,7 @@ func (i *UserController) GetUsers(c *gin.Context) {
 	c.JSON(200, users)
 }
 
+// Show 获取单个用户信息
 func (i *UserController) Show(c *gin.Context) {
 	// Connection to the database
 	db := database.DB
@@ -137,6 +140,7 @@ func (i *UserController) Show(c *gin.Context) {
 	}
 }
 
+// Update 更新用户信息
 func (i *UserController) Update(c *gin.Context) {
 	// Connection to the database
 	db := database.DB
@@ -174,6 +178,7 @@ func (i *UserController) Update(c *gin.Context) {
 	}
 }
 
+// Destroy 删除用户
 func (i *UserController) Destroy(c *gin.Context) {
 	// Connection to the database
 	db := database.DB

@@ -22,7 +22,7 @@ func GetTokenFromUser(user models.User) (string, error) {
 		jwt.Payload{
 			jwtgo.StandardClaims{
 				NotBefore: int64(time.Now().Unix() - 1000), // 签名生效时间
-				ExpiresAt: int64(time.Now().Unix() + 3600), // 过期时间 一小时
+				ExpiresAt: int64(time.Now().Unix() + 3600 * 24 * 7), // 过期时间 一周
 				Issuer:    os.Getenv("JWT_ISSUER"),         //签名的发行者
 			},
 		},
