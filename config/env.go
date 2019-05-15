@@ -6,8 +6,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Loadenv 加载环境变量
-func Loadenv() {
+// init 加载环境变量
+func init() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")

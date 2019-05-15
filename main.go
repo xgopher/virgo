@@ -1,7 +1,7 @@
 package main
 
 import (
-	"app/config"
+	_ "app/config" // 加载 .env 配置文件
 	"app/database"
 	"app/middlewares"
 	"app/modules/oauth"
@@ -12,8 +12,6 @@ import (
 )
 
 func main() {
-	// 加载 .env 配置文件
-	config.Loadenv()
 	// 初始化DB链接池
 	database.InitPool()
 	// 服务停止时清理数据库链接

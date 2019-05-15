@@ -2,9 +2,15 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
+	_ "app/config" // 加载 .env 配置文件
+
+	"github.com/chanxuehong/rand"
+	"github.com/chanxuehong/session"
+	"github.com/chanxuehong/sid"
 	"github.com/chanxuehong/wechat/oauth2"
 	mpoauth2 "github.com/chanxuehong/wechat/open/oauth2"
 	"github.com/gin-gonic/gin"
@@ -14,12 +20,10 @@ var appID string
 var appSecret string
 var oauth2Endpoint oauth2.Endpoint
 var oauth2RedirectURI string
-
-const (
-	oauth2Scope = "snsapi_userinfo" // 填上自己的参数
-)
+var sessionStorage = session.New(20*60, 60*60)
 
 func init() {
+
 	appID = os.Getenv("WECHAT_APP_ID")         // 填上自己的参数
 	appSecret = os.Getenv("WECHAT_APP_SECRET") // 填上自己的参数
 	oauth2RedirectURI = os.Getenv("WECHAT_OAUTH2_REDIRECT_URI")
@@ -38,32 +42,86 @@ func NewOauthWechatController() *OauthWechatController {
 
 // AuthCode 获取扫码二维码
 func (i *OauthWechatController) AuthCode(c *gin.Context) {
-	fmt.Println(appID)
-	AuthCodeURL := mpoauth2.AuthCodeURL(appID, oauth2RedirectURI+"?redirect_uri=http://localhost:8180/api/v1/oauth/xxx", "snsapi_login", "abcdef")
-	fmt.Println(AuthCodeURL)
+	sid := sid.New()
+	state := string(rand.NewHex())
 
-	c.Redirect(http.StatusMovedPermanently, AuthCodeURL)
+	if err := sessionStorage.Add(sid, state); err != nil {
+		// io.WriteString(w, err.Error())
+		c.JSON(404, gin.H{"error": err.Error()})
+		log.Println(err)
+		return
+	}
+
+	c.SetCookie("sid", sid, 3600, "/", "", false, true)
+
+	AuthCodeURL := mpoauth2.AuthCodeURL(appID, oauth2RedirectURI, "snsapi_login", state)
+
+	// 302 临时跳转 - 重定向到微信扫码登录页面
+	c.Redirect(http.StatusFound, AuthCodeURL)
 	c.Abort()
 }
 
 // GetUserInfo 第二步：通过code获取access_token
 func (i *OauthWechatController) GetUserInfo(c *gin.Context) {
 
-	code := c.Query("code")
+	cookie, err := c.Cookie("sid")
 
-	// AuthCodeURL := mpoauth2.AuthCodeURL(appID, oauth2RedirectURI, "snsapi_login", "abcdef")
-	// fmt.Println(AuthCodeURL)
-	fmt.Println(code)
-	// c.Redirect(http.StatusMovedPermanently, AuthCodeURL)
-	// c.Abort()
+	if err != nil {
+
+		c.JSON(404, gin.H{"error": "111"})
+		log.Println(err)
+		return
+	}
+
+	session, err := sessionStorage.Get(cookie)
+	if err != nil {
+		c.JSON(404, gin.H{"error": "xxx"})
+		log.Println(err)
+		return
+	}
+
+	savedState := session.(string) // 一般是要序列化的, 这里保存在内存所以可以这么做
+
+	code := c.Query("code")
+	if code == "" {
+		log.Println("用户禁止授权")
+		return
+	}
+
+	queryState := c.Query("state")
+	if queryState == "" {
+		log.Println("state 参数为空")
+		return
+	}
+
+	if savedState != queryState {
+		str := fmt.Sprintf("state 不匹配, session 中的为 %q, url 传递过来的是 %q", savedState, queryState)
+		c.JSON(404, str)
+		log.Println(str)
+		return
+	}
 
 	oauth2Client := oauth2.Client{
 		Endpoint: oauth2Endpoint,
 	}
 
-	token, _ := oauth2Client.ExchangeToken(code)
+	token, err := oauth2Client.ExchangeToken(code)
 
-	userinfo, _ := mpoauth2.GetUserInfo(token.AccessToken, token.OpenId, "", nil)
+	if err != nil {
+		c.JSON(404, gin.H{"error": err.Error()})
+		log.Println(err)
+		return
+	}
+
+	log.Printf("token: %+v\r\n", token)
+
+	userinfo, err := mpoauth2.GetUserInfo(token.AccessToken, token.OpenId, "", nil)
+
+	if err != nil {
+		c.JSON(404, gin.H{"error": err.Error()})
+		log.Println(err)
+		return
+	}
 
 	c.JSON(200, gin.H{
 		"status": 0,
