@@ -34,7 +34,7 @@
 - [x] 2. [Gin middleware for session management](https://github.com/gin-contrib/sessions) 支持 redis, memcache...
 - [x] 3. [weixin/wechat/微信公众平台/微信企业号/微信商户平台/微信支付 go/golang sdk](https://github.com/chanxuehong/wechat)
 - [x] 4. [ORM 数据库 [jinzhu/gorm]](https://github.com/jinzhu/gorm)
-- [x] 5. ...
+- [x] 5. [facebook ioc 依赖注入包](https://github.com/facebookarchive/inject)
 
 详情请看 `go.mod` 文件
 
