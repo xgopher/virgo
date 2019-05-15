@@ -4,7 +4,8 @@ import "time"
 
 // OauthWechat 微信用户
 type OauthWechat struct {
-	ID       uint   `gorm:"AUTO_INCREMENT" form:"id" json:"id"`                           //
+	ID       uint   `gorm:"AUTO_INCREMENT" form:"id" json:"id"`                           // 自增 id
+	UID      uint64 `gorm:"index;column:uid;not null;default:0" form:"uid" json:"uid"`    // 分布式user_id, 用雪花算法生成
 	OpenID   string `gorm:"index;column:openid;not null" form:"openid" json:"openid"`     // 用户的唯一标识
 	UnionID  string `gorm:"column:unionid;unique;not null" form:"unionid" json:"unionid"` // 只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
 	Nickname string `gorm:"not null" form:"nickname" json:"nickname"`                     // 昵称
