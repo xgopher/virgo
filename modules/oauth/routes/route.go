@@ -10,6 +10,6 @@ import (
 func RegisterRoutes(router *gin.Engine) {
 	oauthController := controllers.NewOauthWechatController()
 
-	router.GET("/api/v1/oauth/authCode", oauthController.AuthCode)
-	router.GET("/api/v1/oauth/getUserInfo", oauthController.GetUserInfo)
+	router.GET("/api/v1/oauth/login", oauthController.Login)
+	router.GET("/api/v1/oauth/callback", oauthController.Callback)
 }

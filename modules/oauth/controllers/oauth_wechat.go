@@ -14,6 +14,10 @@ import (
 	"github.com/chanxuehong/wechat/oauth2"
 	mpoauth2 "github.com/chanxuehong/wechat/open/oauth2"
 	"github.com/gin-gonic/gin"
+
+	"app/database"
+	"app/modules/oauth/models"
+	"encoding/json"
 )
 
 var appID string
@@ -40,8 +44,9 @@ func NewOauthWechatController() *OauthWechatController {
 	return &OauthWechatController{}
 }
 
-// AuthCode 获取扫码二维码
-func (i *OauthWechatController) AuthCode(c *gin.Context) {
+// Login 扫码登陆, 发起微信授权登录请求
+// 第一步：请求CODE
+func (i *OauthWechatController) Login(c *gin.Context) {
 	sid := sid.New()
 	state := string(rand.NewHex())
 
@@ -61,8 +66,9 @@ func (i *OauthWechatController) AuthCode(c *gin.Context) {
 	c.Abort()
 }
 
-// GetUserInfo 第二步：通过code获取access_token
-func (i *OauthWechatController) GetUserInfo(c *gin.Context) {
+// Callback 微信授权回调
+// 第二步：通过code交换 access_token, 接着 access_token 获取微信用户信息
+func (i *OauthWechatController) Callback(c *gin.Context) {
 
 	cookie, err := c.Cookie("sid")
 
@@ -119,13 +125,56 @@ func (i *OauthWechatController) GetUserInfo(c *gin.Context) {
 	// 返回unionid、openid 等信息
 	userinfo, err := mpoauth2.GetUserInfo(token.AccessToken, token.OpenId, "", nil)
 
-	// 根据 unionid 获取本地 user 信息 (如：关联 users 表)
-	// ... todo...
+	if err != nil {
+		c.JSON(404, gin.H{"error": err.Error()})
+		log.Println(err)
+		return
+	}
+
+	// 保存 or 更新微信用户信息
+	db := database.DB
+	// 序列化 - 用户特权信息
+	jsonPrivilege, err := json.Marshal(userinfo.Privilege)
 
 	if err != nil {
 		c.JSON(404, gin.H{"error": err.Error()})
 		log.Println(err)
 		return
+	}
+
+	oauthWechat := models.OauthWechat{
+		OpenID:     userinfo.OpenId,  // 字段有区别
+		UnionID:    userinfo.UnionId, // 字段有区别
+		Nickname:   userinfo.Nickname,
+		HeadImgURL: userinfo.HeadImageURL, // 字段有区别
+		Sex:        userinfo.Sex,
+		Province:   userinfo.Province,
+		City:       userinfo.City,
+		Country:    userinfo.Country,
+		Privilege:  string(jsonPrivilege), // 字段有区别
+	}
+
+	var count int
+
+	db.Model(&models.OauthWechat{}).Where("unionid = ?", userinfo.UnionId).Count(&count)
+
+	// 下面这一段，又长又臭，可以考虑封装在 repositories 层
+	// FirstOrCreate, FirstOrInit 这2个方法效率太低，丢弃!!!
+	// Save 方法，需要 id 主键, 放弃!!!
+	if count > 0 {
+		// 更新
+		db.Model(&models.OauthWechat{}).Where("unionid = ?", userinfo.UnionId).UpdateColumns(models.OauthWechat{
+			Nickname:   userinfo.Nickname,
+			HeadImgURL: userinfo.HeadImageURL, // 字段有区别
+			Sex:        userinfo.Sex,
+			Province:   userinfo.Province,
+			City:       userinfo.City,
+			Country:    userinfo.Country,
+			Privilege:  string(jsonPrivilege), // 字段有区别
+		})
+	} else {
+		// 创建 -- 多了一次 SELECT xx from 表名 WHERE ID=xx; 有点多余
+		db.Create(&oauthWechat)
 	}
 
 	c.JSON(200, gin.H{
