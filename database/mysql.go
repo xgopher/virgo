@@ -1,15 +1,18 @@
 package database
 
 import (
+	_ "app/config" // 加载 .env 配置文件
+	"os"
+
 	_ "github.com/go-sql-driver/mysql" // 导入 mysql 驱动
 	"github.com/jinzhu/gorm"
-	"os"
 )
 
 var DB *gorm.DB // db pool instance
 var err error   // db err instance
 
-func InitPool() {
+// InitDb ...
+func InitDb() {
 	// Openning file
 	conn := os.Getenv("MYSQL_CONN")
 	DB, err = gorm.Open("mysql", conn)

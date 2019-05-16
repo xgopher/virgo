@@ -23,9 +23,13 @@ func main() {
 	}
 
 	// 初始化DB链接池
-	database.InitPool()
+	database.InitDb()
 	// 服务停止时清理数据库链接
 	defer database.DB.Close()
+
+	database.InitRedis()
+	// 服务停止时清理 redis 链接
+	defer database.Redis.Close()
 
 	e := gin.Default()
 	// 调用跨域中间件

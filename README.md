@@ -38,6 +38,7 @@
 - [x] 3. [weixin/wechat/微信公众平台/微信企业号/微信商户平台/微信支付 go/golang sdk](https://github.com/chanxuehong/wechat)
 - [x] 4. [ORM 数据库 [jinzhu/gorm]](https://github.com/jinzhu/gorm)
 - [x] 5. [facebook ioc 依赖注入包](https://github.com/facebookarchive/inject)
+- [x] 6. [gomodule/redigo 包](https://github.com/gomodule/redigo)
 
 详情请看 `go.mod` 文件
 
