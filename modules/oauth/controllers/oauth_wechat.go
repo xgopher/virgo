@@ -1,30 +1,27 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
-	_ "app/config" // 加载 .env 配置文件
-
-	"github.com/chanxuehong/rand"
-	"github.com/chanxuehong/session"
-	"github.com/chanxuehong/sid"
 	"github.com/chanxuehong/wechat/oauth2"
 	mpoauth2 "github.com/chanxuehong/wechat/open/oauth2"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 
+	_ "app/config" // 加载 .env 配置文件
 	"app/database"
 	"app/modules/oauth/models"
-	"encoding/json"
+	"app/modules/oauth/services"
 )
 
 var appID string
 var appSecret string
 var oauth2Endpoint oauth2.Endpoint
 var oauth2RedirectURI string
-var sessionStorage = session.New(20*60, 60*60)
 
 func init() {
 
@@ -47,17 +44,26 @@ func NewOauthWechatController() *OauthWechatController {
 // Login 扫码登陆, 发起微信授权登录请求
 // 第一步：请求CODE
 func (i *OauthWechatController) Login(c *gin.Context) {
-	sid := sid.New()
-	state := string(rand.NewHex())
 
-	if err := sessionStorage.Add(sid, state); err != nil {
-		// io.WriteString(w, err.Error())
-		c.JSON(404, gin.H{"error": err.Error()})
-		log.Println(err)
+	state := services.RandString(32)
+
+	conn := database.Redis
+
+	var err error
+
+	_, err = conn.Do("SET", state, 1)
+	if err != nil {
+		fmt.Println("redis set error:", err)
 		return
 	}
 
-	c.SetCookie("sid", sid, 3600, "/", "", false, true)
+	// 有效期 5 分钟
+	_, err = conn.Do("expire", state, 300)
+
+	if err != nil {
+		fmt.Println("set expire error: ", err)
+		return
+	}
 
 	AuthCodeURL := mpoauth2.AuthCodeURL(appID, oauth2RedirectURI, "snsapi_login", state)
 
@@ -69,24 +75,6 @@ func (i *OauthWechatController) Login(c *gin.Context) {
 // Callback 微信授权回调
 // 第二步：通过code交换 access_token, 接着 access_token 获取微信用户信息
 func (i *OauthWechatController) Callback(c *gin.Context) {
-
-	cookie, err := c.Cookie("sid")
-
-	if err != nil {
-
-		c.JSON(404, gin.H{"error": "111"})
-		log.Println(err)
-		return
-	}
-
-	session, err := sessionStorage.Get(cookie)
-	if err != nil {
-		c.JSON(404, gin.H{"error": "xxx"})
-		log.Println(err)
-		return
-	}
-
-	savedState := session.(string) // 一般是要序列化的, 这里保存在内存所以可以这么做
 
 	code := c.Query("code")
 	if code == "" {
@@ -100,8 +88,8 @@ func (i *OauthWechatController) Callback(c *gin.Context) {
 		return
 	}
 
-	if savedState != queryState {
-		str := fmt.Sprintf("state 不匹配, session 中的为 %q, url 传递过来的是 %q", savedState, queryState)
+	if !checkState(queryState) {
+		str := fmt.Sprintf("state 不匹配, url 传递过来的是 %q", queryState)
 		c.JSON(404, str)
 		log.Println(str)
 		return
@@ -182,4 +170,25 @@ func (i *OauthWechatController) Callback(c *gin.Context) {
 		"msg":    "登录成功！",
 		"data":   userinfo,
 	})
+}
+
+// 验证 state 正确性
+func checkState(state string) bool {
+
+	conn := database.Redis
+	savedState, err := redis.String(conn.Do("GET", state))
+
+	if err != nil {
+		fmt.Println("redis get error:", err)
+		return false
+	}
+
+	if "1" == savedState {
+		return true
+	}
+
+	str := fmt.Sprintf("state 不匹配, url 传递过来的是 %q", state)
+	log.Println(str)
+	return false
+
 }
