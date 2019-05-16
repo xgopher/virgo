@@ -1,5 +1,6 @@
 # Virgo
 
+轻量级 + 模块化 快速开发web项目
 
 ## 安装
 
@@ -43,7 +44,8 @@ godotenv -f .env go test ./...
 - [x] 1. [Gin Framework](https://github.com/gin-gonic/gin)
 - [x] 2. [Gin middleware for session management](https://github.com/gin-contrib/sessions) 支持 redis, memcache...
 - [x] 3. [weixin/wechat/微信公众平台/微信企业号/微信商户平台/微信支付 go/golang sdk](https://github.com/chanxuehong/wechat)
-- [x] 4. [ORM 数据库 [jinzhu/gorm]](https://github.com/jinzhu/gorm)
+- [x] 4. **弃坑ing... sql效率很低, 更别说优化了** 用 `database/sql` 代替 => [ORM 数据库 [jinzhu/gorm]](https://github.com/jinzhu/gorm)
+    - [database/sql 示例](https://github.com/go-sql-driver/mysql/wiki/Examples)
 - [x] 5. [facebook ioc 依赖注入包](https://github.com/facebookarchive/inject)
 - [x] 6. [gomodule/redigo 包](https://github.com/gomodule/redigo)
 
@@ -96,3 +98,11 @@ func main() {
 - [Gin Framework](https://github.com/gin-gonic/gin)
 - [Gin 官方文档](https://gin-gonic.com/zh-cn/docs/)
 - [基于Go框架Gin开发RESTFul API](http://www.jyguagua.com/?p=3038)
+
+## 如何交流、反馈、参与贡献？
+
+发站内私信吧...
+
+## License
+
+[MIT license](http://opensource.org/licenses/MIT)
