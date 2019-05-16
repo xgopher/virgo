@@ -1,5 +1,6 @@
 # Virgo
 
+轻量级 + 模块化 快速开发web项目
 
 ## 安装
 
@@ -95,3 +96,11 @@ func main() {
 - [Gin Framework](https://github.com/gin-gonic/gin)
 - [Gin 官方文档](https://gin-gonic.com/zh-cn/docs/)
 - [基于Go框架Gin开发RESTFul API](http://www.jyguagua.com/?p=3038)
+
+## 如何交流、反馈、参与贡献？
+
+发站内私信吧...
+
+## License
+
+[MIT license](http://opensource.org/licenses/MIT)
