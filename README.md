@@ -31,6 +31,12 @@
 
     - https://github.com/howeyc/fsnotify
 
+## 单元测试
+
+```
+godotenv -f .env go test ./...
+```
+
 ## 技术选型
 
 - [x] 1. [Gin Framework](https://github.com/gin-gonic/gin)
