@@ -20,9 +20,12 @@
     - 下载bee工具：`go get github.com/beego/bee` (建议不要在此文件夹下执行，不然会进入mod文件里面)
     - 在此文件夹下执行`bee run`，会自动监听文件变化，重新编译
 
-- 本地开发热更新2 (可能比bee好一点, 暂没测试)
-
-    - https://github.com/gravityblast/fresh
+- 本地开发热更新2 (可能比bee好一点, 自主选择)
+    - 下载fresh工具: `go get github.com/pilu/fresh` (不要在此文件夹下执行，不然会进入mod文件里面)
+    - 在项目根目录下， 执行 `fresh` (对应配置文件 `runner.conf`), 会自动监听文件变化，重新编译
+    - 开源项目地址：https://github.com/gravityblast/fresh
+    - **懒人方法(里面写好了自动安装fresh)**：
+        - 直接执行 `./run-fresh.sh`    
 
 - 生产环境热更新 (详细使用，后续补全)
 
