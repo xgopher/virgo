@@ -1,7 +1,7 @@
 package database
 
 import (
-	_ "app/config" // 加载 .env 配置文件
+	// _ "app/config" // 加载 .env 配置文件
 	"fmt"
 	"testing"
 

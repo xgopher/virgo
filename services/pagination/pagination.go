@@ -32,7 +32,7 @@ type Meta struct {
 }
 
 // Pagging 分页
-func Pagging(p *Param, result interface{}) *Meta {
+func Pagging(p *Param, result interface{}) (*Meta, error) {
 	db := p.DB
 
 	if p.Page < 1 {
@@ -60,7 +60,8 @@ func Pagging(p *Param, result interface{}) *Meta {
 		offset = (p.Page - 1) * p.PerPage
 	}
 
-	db.Limit(p.PerPage).Offset(offset).Find(result)
+	err := db.Limit(p.PerPage).Offset(offset).Find(result).Error
+	
 	<-done
 
 	paginator.Total = count
@@ -86,7 +87,7 @@ func Pagging(p *Param, result interface{}) *Meta {
 		Paginator: paginator,
 	}
 	
-	return &r
+	return &r, err
 }
 
 func countRecords(db *gorm.DB, anyType interface{}, done chan bool, count *int) {
@@ -99,7 +100,7 @@ func getTo(paginator Paginator, p *Param) int{
 	if paginator.LastPage == paginator.CurrentPage {
 		count := paginator.Total % p.PerPage 
 		return offset + count
-	} else {
-		return offset + p.PerPage 
 	}
+
+	return offset + p.PerPage 
 }

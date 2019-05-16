@@ -72,7 +72,7 @@ func (i *UserController) Index(c *gin.Context) {
 	var users []models.User
 	// SELECT * FROM users
 
-	paginator := pagination.Pagging(&pagination.Param{
+	paginator, err := pagination.Pagging(&pagination.Param{
         DB:      db,
         Page:    page,
         PerPage:   PerPage,
@@ -81,13 +81,20 @@ func (i *UserController) Index(c *gin.Context) {
 	
 	// db.Find(&users)
 
-	// Display JSON result
-	c.JSON(200, gin.H{
-        "status": 0,
-        "msg": "success!",
-		"data": users,
-		"meta": paginator,
-	})
+	if err != nil {
+		c.JSON(200, gin.H{
+			"status": 1,
+        	"msg": err,
+		})
+	}else{
+		// Display JSON result
+		c.JSON(200, gin.H{
+			"status": 0,
+			"msg": "success!",
+			"data": users,
+			"meta": paginator,
+		})
+	}
 }
 
 // Store 新增用户

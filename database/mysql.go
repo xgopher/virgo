@@ -1,13 +1,14 @@
 package database
 
 import (
-	_ "app/config" // 加载 .env 配置文件
+	// _ "app/config" // 加载 .env 配置文件
 	"os"
 
 	_ "github.com/go-sql-driver/mysql" // 导入 mysql 驱动
 	"github.com/jinzhu/gorm"
 )
 
+// DB ...
 var DB *gorm.DB // db pool instance
 var err error   // db err instance
 

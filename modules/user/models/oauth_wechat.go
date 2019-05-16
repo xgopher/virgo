@@ -1,14 +1,14 @@
 package models
 
-import "time"
+import "app/models"
 
 // OauthWechat 微信用户
 type OauthWechat struct {
+	models.Date
+
 	ID        uint   `gorm:"AUTO_INCREMENT" form:"id" json:"id"`
 	Unionid   string `gorm:"not null" form:"unionid" json:"unionid"`
 	Nickname  string `gorm:"not null" form:"nickname" json:"nickname"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 // TableName 设置表名

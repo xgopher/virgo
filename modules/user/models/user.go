@@ -1,6 +1,6 @@
 package models
 
-import "app/services/time"
+import "app/models"
 
 // User ...
 type User struct {
@@ -8,10 +8,11 @@ type User struct {
 	Firstname string `gorm:"not null" form:"firstname" json:"firstname"`
 	Lastname  string `gorm:"not null" form:"lastname" json:"lastname"`
 	Username  string `gorm:"size:32;not null;unique_index" from:"username" json:"username"`
-	Password  string `gorm:"not null" from:"password" json:"password"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt *time.Time `json:"-"`
+	Password  string `gorm:"not null" from:"password" json:"-"`
+
+	models.Date
+
+	Profile   UserProfile `gorm:"ForeignKey:ID;AssociationForeignKey:UserID"`
 }
 
 // TableName 设置表名
