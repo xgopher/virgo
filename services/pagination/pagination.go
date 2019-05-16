@@ -31,14 +31,8 @@ type Meta struct {
 	Paginator `json:"pagination"`
 }
 
-// Result 分页处理结果
-type Result struct {
-	Meta `json:"meta"`
-	Data interface{} `json:"data"`
-}
-
 // Pagging 分页
-func Pagging(p *Param, result interface{}) *Result {
+func Pagging(p *Param, result interface{}) *Meta {
 	db := p.DB
 
 	if p.Page < 1 {
@@ -70,14 +64,12 @@ func Pagging(p *Param, result interface{}) *Result {
 	<-done
 
 	paginator.Total = count
-	// paginator.Data = result
 	paginator.CurrentPage = p.Page
-
-	paginator.From = offset + 1
-	paginator.To = offset + count
 	paginator.PerPage = p.PerPage
 	paginator.LastPage = int(math.Ceil(float64(count) / float64(p.PerPage)))
-
+	paginator.From = offset + 1
+	paginator.To = getTo(paginator, p)
+	
 	if p.Page > 1 {
 		paginator.PrevPage = p.Page - 1
 	} else {
@@ -90,17 +82,24 @@ func Pagging(p *Param, result interface{}) *Result {
 		paginator.NextPage = p.Page + 1
 	}
 
-	r := Result{
-		Data: result,
-		Meta: Meta{
-			Paginator: paginator,
-		},
+	r := Meta{
+		Paginator: paginator,
 	}
+	
 	return &r
-	// return &paginator
 }
 
 func countRecords(db *gorm.DB, anyType interface{}, done chan bool, count *int) {
 	db.Model(anyType).Count(count)
 	done <- true
+}
+
+func getTo(paginator Paginator, p *Param) int{
+	offset := paginator.From - 1
+	if paginator.LastPage == paginator.CurrentPage {
+		count := paginator.Total % p.PerPage 
+		return offset + count
+	} else {
+		return offset + p.PerPage 
+	}
 }

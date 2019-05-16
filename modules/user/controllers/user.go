@@ -84,9 +84,9 @@ func (i *UserController) Index(c *gin.Context) {
 	// Display JSON result
 	c.JSON(200, gin.H{
         "status": 0,
-        "msg":    "success!",
-		"data":   paginator.Data,
-		"meta": paginator.Meta,
+        "msg": "success!",
+		"data": users,
+		"meta": paginator,
 	})
 }
 
