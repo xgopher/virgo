@@ -16,24 +16,24 @@ type Param struct {
 
 // Paginator 分页返回
 type Paginator struct {
-	Total       int         `json:"total"`
-	From        int         `json:"from"`
-	To          int         `json:"to"`
-	PerPage     int         `json:"per_page"`
-	CurrentPage int         `json:"current_page"`
-	LastPage    int         `json:"last_page"`
-	PrevPage    int         `json:"prev_page"`
-	NextPage    int         `json:"next_page"`
+	Total       int `json:"total"`
+	From        int `json:"from"`
+	To          int `json:"to"`
+	PerPage     int `json:"per_page"`
+	CurrentPage int `json:"current_page"`
+	LastPage    int `json:"last_page"`
+	PrevPage    int `json:"prev_page"`
+	NextPage    int `json:"next_page"`
 }
 
 // Meta 分页头信息
 type Meta struct {
-	Paginator `josn:"pagination"`
+	Paginator `json:"pagination"`
 }
 
 // Result 分页处理结果
 type Result struct {
-	Meta `josn:"meta"`
+	Meta `json:"meta"`
 	Data interface{} `json:"data"`
 }
 
@@ -92,7 +92,7 @@ func Pagging(p *Param, result interface{}) *Result {
 
 	r := Result{
 		Data: result,
-		Meta: Meta {
+		Meta: Meta{
 			Paginator: paginator,
 		},
 	}
